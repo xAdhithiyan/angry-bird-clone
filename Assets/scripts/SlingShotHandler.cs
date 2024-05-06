@@ -24,11 +24,13 @@ public class NewBehaviourScript : MonoBehaviour
     // similar to importing other files 
     [SerializeField] private SlingShotArea _slingShotArea;
 
-    [SerializeField] private float maxLength = 3.5f; 
+    [Header("SlingShot Stats")]    
+    [SerializeField] private float maxLength = 3.5f;
+    [SerializeField] private float _shotForce = 5f; 
 
     [Header("Bird")]
-    // a gameObject that is basically a prefab
-    [SerializeField] private GameObject _angryBirdPrefab;
+    // a gameObject that is basically a prefab (the AngeyBird.cs file is tied to the prefab -> to solve this we can make it of type AngryBird)
+    [SerializeField] private AngryBird _angryBirdPrefab;
     [SerializeField] private float _angryBirdPositionOffset = 2f;
 
     private Vector2 _slingShotLinePosition;
@@ -38,7 +40,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     private bool _clickedWithinArea;
 
-    private GameObject _spawnedAngryBird;
+    private AngryBird _spawnedAngryBird;
 
     private void Awake()
     {
@@ -65,6 +67,7 @@ public class NewBehaviourScript : MonoBehaviour
         if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
             _clickedWithinArea = false;
+            _spawnedAngryBird.LaunchBird(_direction, _shotForce);
         }
     }
     #region SlingShotMethods
@@ -108,14 +111,18 @@ public class NewBehaviourScript : MonoBehaviour
         setLines(_idlePosition.position);
 
         Vector2 dir = (_centerPosition.position - _idlePosition.position).normalized;
+        // to spawn in a game object (based on a prefab)
+        // adding the normalized vector to the starting position to move the game object a bit towards the direction from user click/idle position to center position
+        _spawnedAngryBird = Instantiate(_angryBirdPrefab, (Vector2)_idlePosition.position + dir * _angryBirdPositionOffset, Quaternion.identity);
 
-        //to spawn in a game object (prefab)
-        _spawnedAngryBird = Instantiate(_angryBirdPrefab, _idlePosition.position, Quaternion.identity);
+        // the right(the x axis of the bird) is rotated to face the direction of dir vector
+        _spawnedAngryBird.transform.right = dir;
     }
 
     private void PositonAndRotationBird()
     {
-        _spawnedAngryBird.transform.position = _slingShotLinePosition; 
+        _spawnedAngryBird.transform.position = _slingShotLinePosition + _directionNormalized * _angryBirdPositionOffset;
+        _spawnedAngryBird.transform.right = _directionNormalized;
     }
 
 

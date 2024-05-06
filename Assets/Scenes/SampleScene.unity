@@ -973,7 +973,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 1.5806315}
@@ -1165,8 +1165,9 @@ MonoBehaviour:
   _idlePosition: {fileID: 789084738}
   _slingShotArea: {fileID: 1375533760}
   maxLength: 3.5
-  _angryBirdPrefab: {fileID: 1234547454323797379, guid: edd87f956cd889e41b8381d9dd84ec5e, type: 3}
-  _angryBirdPositionOffset: 2
+  _shotForce: 10
+  _angryBirdPrefab: {fileID: 1070797212027591808, guid: edd87f956cd889e41b8381d9dd84ec5e, type: 3}
+  _angryBirdPositionOffset: 0.3
 --- !u!1 &1808684972
 GameObject:
   m_ObjectHideFlags: 0
