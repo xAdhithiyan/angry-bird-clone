@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // input system is a package downloaded from the package manager in unity engine (a newer input system compared to the legacy input)
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
 
 public class NewBehaviourScript : MonoBehaviour
 {
@@ -24,9 +24,10 @@ public class NewBehaviourScript : MonoBehaviour
     // similar to importing other files 
     [SerializeField] private SlingShotArea _slingShotArea;
 
-    [Header("SlingShot Stats")]    
+    [Header("SlingShot Stats")]
     [SerializeField] private float maxLength = 3.5f;
-    [SerializeField] private float _shotForce = 5f; 
+    [SerializeField] private float _shotForce = 5f;
+    [SerializeField] private float _timeBetweenNextBird = 2f;
 
     [Header("Bird")]
     // a gameObject that is basically a prefab (the AngeyBird.cs file is tied to the prefab -> to solve this we can make it of type AngryBird)
@@ -41,6 +42,7 @@ public class NewBehaviourScript : MonoBehaviour
     private bool _clickedWithinArea;
 
     private AngryBird _spawnedAngryBird;
+    private bool _birdOnSlingShot;
 
     private void Awake()
     {
@@ -58,16 +60,31 @@ public class NewBehaviourScript : MonoBehaviour
             _clickedWithinArea = true;
         }
 
-        if(Mouse.current.leftButton.isPressed && _clickedWithinArea)
+        if(Mouse.current.leftButton.isPressed && _clickedWithinArea && _birdOnSlingShot)
         {
             DrawSlingShot();
             PositonAndRotationBird();
         }
 
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        if (Mouse.current.leftButton.wasReleasedThisFrame && _birdOnSlingShot)
         {
-            _clickedWithinArea = false;
-            _spawnedAngryBird.LaunchBird(_direction, _shotForce);
+
+            // singleton pattern -> we can directly use the class variables and methods.no reference variable is needed 
+            if (GameManager.instance.HasEnoughShots())
+            {
+                GameManager.instance.UseShot();
+
+                _clickedWithinArea = false;
+                _birdOnSlingShot = false;
+                _spawnedAngryBird.LaunchBird(_direction, _shotForce)
+                setLines(_centerPosition.position);
+
+                if (GameManager.instance.HasEnoughShots())
+                {
+                    StartCoroutine(SpawnAngryBirdAfterTime());
+
+                }
+            }
         }
     }
     #region SlingShotMethods
@@ -117,6 +134,8 @@ public class NewBehaviourScript : MonoBehaviour
 
         // the right(the x axis of the bird) is rotated to face the direction of dir vector
         _spawnedAngryBird.transform.right = dir;
+
+        _birdOnSlingShot = true;
     }
 
     private void PositonAndRotationBird()
@@ -125,7 +144,13 @@ public class NewBehaviourScript : MonoBehaviour
         _spawnedAngryBird.transform.right = _directionNormalized;
     }
 
+    // co-routine -> a method that can pause execution
+    private IEnumerator SpawnAngryBirdAfterTime()
+    {
+        yield return new WaitForSeconds(_timeBetweenNextBird);
 
+        SpawnAngryBird();
+    }
 
     #endregion
 }
