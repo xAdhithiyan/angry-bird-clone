@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 // input system is a package downloaded from the package manager in unity engine (a newer input system compared to the legacy input)
 using UnityEngine.InputSystem;
 
-public class NewBehaviourScript : MonoBehaviour
+public class SlingShotHandler : MonoBehaviour
 {
     [Header("Line Renderers")]
     // serializefield is to expose the unity vairable in the engine so it can be assigned to the a particular gameObject
@@ -21,7 +20,7 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] private Transform _idlePosition;
 
     [Header("SlingShotArea script")]
-    // similar to importing other files 
+    // similar to importing other files -> to get access to the other c# scripts
     [SerializeField] private SlingShotArea _slingShotArea;
 
     [Header("SlingShot Stats")]

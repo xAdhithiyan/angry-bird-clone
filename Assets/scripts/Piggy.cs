@@ -24,6 +24,7 @@ public class Piggy : MonoBehaviour
 
     public void Die()
     {
+        GameManager.instance.RemovePiggy(this);
         Destroy(gameObject);
     }
 
