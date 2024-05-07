@@ -10,8 +10,13 @@ public class AngryBird : MonoBehaviour
 
     private bool _hasBeenLaunched;
 
+    [SerializeField] private AudioClip _hittingSound;
+    private AudioSource _audioSource;
+
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
+
         //another method to SerializeField 
         _rb = GetComponent<Rigidbody2D>();
         // turns off gravity
@@ -46,5 +51,7 @@ public class AngryBird : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         _hasBeenLaunched = false;
+        SoundManager.instance.PlayClip(_hittingSound, _audioSource);
+        Destroy(this);
     }
 }

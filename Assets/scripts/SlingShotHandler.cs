@@ -33,18 +33,28 @@ public class SlingShotHandler : MonoBehaviour
     [SerializeField] private AngryBird _angryBirdPrefab;
     [SerializeField] private float _angryBirdPositionOffset = 2f;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip _stretchingSlingShot;
+    [SerializeField] private AudioClip _releasingSlingShot;
+
     private Vector2 _slingShotLinePosition;
     
     private Vector2 _direction;
     private Vector2 _directionNormalized;
 
     private bool _clickedWithinArea;
+    private bool _birdOnSlingShot;
 
     private AngryBird _spawnedAngryBird;
-    private bool _birdOnSlingShot;
+
+    private AudioSource _audioSource;
+
 
     private void Awake()
     {
+        // add a audio source to this game object
+        _audioSource = GetComponent<AudioSource>();
+
         _leftLineRenderer.enabled = false;  
         _rightLineRenderer.enabled = false;
 
@@ -57,6 +67,12 @@ public class SlingShotHandler : MonoBehaviour
         if (Mouse.current.leftButton.wasPressedThisFrame && _slingShotArea.isWithinSlingShotArea())
         {
             _clickedWithinArea = true;
+
+            if (_birdOnSlingShot)
+            {
+                //sounds 
+                SoundManager.instance.PlayClip(_stretchingSlingShot, _audioSource);
+            }
         }
 
         if(Mouse.current.leftButton.isPressed && _clickedWithinArea && _birdOnSlingShot)
@@ -77,6 +93,8 @@ public class SlingShotHandler : MonoBehaviour
                 _birdOnSlingShot = false;
                 _spawnedAngryBird.LaunchBird(_direction, _shotForce);
                 setLines(_centerPosition.position);
+
+                SoundManager.instance.PlayClip(_releasingSlingShot, _audioSource); 
 
                 if (GameManager.instance.HasEnoughShots())
                 {
