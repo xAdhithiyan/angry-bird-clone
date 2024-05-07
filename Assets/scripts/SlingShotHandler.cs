@@ -76,13 +76,12 @@ public class NewBehaviourScript : MonoBehaviour
 
                 _clickedWithinArea = false;
                 _birdOnSlingShot = false;
-                _spawnedAngryBird.LaunchBird(_direction, _shotForce)
+                _spawnedAngryBird.LaunchBird(_direction, _shotForce);
                 setLines(_centerPosition.position);
 
                 if (GameManager.instance.HasEnoughShots())
                 {
                     StartCoroutine(SpawnAngryBirdAfterTime());
-
                 }
             }
         }
